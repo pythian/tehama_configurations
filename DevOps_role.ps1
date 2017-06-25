@@ -16,8 +16,8 @@ $apps = @(
   "terraform",
   "postman",
   "mysql.workbench",
-  "yarn",
   "nodejs",
+  "yarn",
   "cygwin",
   "superputty",
   "grepwin",
@@ -25,22 +25,50 @@ $apps = @(
   "wget",
   "curl",
   "webstorm",
-  "googlechrome"
+  "googlechrome",
+  "virtualbox",  # Only supports 32-bit hosts on workspaces
+  "docker",
+  "docker-machine",
+  "docker-compose",
+  "vagrant"
 )
+[System.Collections.ArrayList]$installed_successfully = @( )
+[System.Collections.ArrayList]$install_failed = @( ) 
 
-function Install-Chocolatey {
- iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+function Configure-Vela-Workspace() {
+  Install-Chocolatey
+  Install-Apps
+  Final-Report
 }
 
-function Install-Apps {
-  foreach ($app in $apps) {
-    choco install $app -y
+function Install-Chocolatey() {
+  if(-Not (Get-Command choco -errorAction SilentlyContinue)) {
+    iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
   }
 }
 
-function Configure-Vela-Workspace {
-  Install-Chocolatey
-  Install-Apps
+function Install-Apps() {
+  foreach ($app in $apps) {
+    choco install $app -y
+    Trap-Status
+  }
+}
+
+function Trap-Status() {
+  if($LASTEXITCODE -eq 0) {
+    $installed_successfully.add($app)
+  } else {
+    $install_failed.add($app)
+  }
+}
+
+function Final-Report() {
+  if($installed_successfully.count -gt 0) {
+    Write-Host "Successfully installed:`n" ($installed_successfully -join "`n")
+  }
+  if($install_failed -gt 0) {
+    Write-Host "Installs which failed:`n" ($install_failed -join "`n")
+  }
 }
 
 Configure-Vela-Workspace
