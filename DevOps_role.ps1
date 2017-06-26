@@ -31,7 +31,8 @@ $apps = @(
   "docker",
   "docker-machine",
   "docker-compose",
-  "vagrant"
+  "vagrant",
+  "slack"
 )
 
 # Searchable list of windows features available by running 'Get-WindowsFeature'
@@ -40,7 +41,9 @@ $windows_features = @(
 ) 
 
 $remote_files = @{
-  "https://downloads.dcos.io/binaries/cli/windows/x86-64/dcos-1.9/dcos.exe" = "C:\ProgramData\chocolatey\bin\dcos.exe"
+  "https://downloads.dcos.io/binaries/cli/windows/x86-64/dcos-1.9/dcos.exe" = "C:\ProgramData\chocolatey\bin\dcos.exe";
+  # Wox is an Alfred equivalent launcher for Windows: Option + Spacebar
+  "https://github.com/Wox-launcher/Wox/releases/download/v1.3.424/Wox-1.3.424.exe" = "C:\ProgramData\chocolatey\bin\Wox.exe"
 }
 
 $paths = @(
@@ -66,6 +69,11 @@ function Configure-Vela-Workspace() {
   Download-Files
   Add-Paths
   Show-Report
+  Execute-PostInstall
+}
+
+function Execute-PostInstall() {
+  Write-Host "`nRun 'Wox.exe' once to start an Alfred-like launcher."
 }
 
 function Install-Chocolatey() {
@@ -92,6 +100,8 @@ function Download-Files() {
   foreach ($remote_file in $remote_files.GetEnumerator()) {
     if (-Not (Test-Path $remote_file.Value)) {
       Download-File -Source $remote_file.Name.toString() -Destination $remote_file.Value
+    } else {
+      Write-Host $remote_file.Name.toString() " is already installed."
     }
     Trap-Status -item $remote_file.Name
   }
@@ -131,12 +141,12 @@ function Trap-Status($item) {
 }
 
 function Show-Report() {
-  Write-Host "########## Vela Configuration Report##########"
+  Write-Host "`n########## Vela Configuration Report##########"
   if($installed_successfully.count -gt 0) {
-    Write-Host "Successfully installed:`n" ($installed_successfully -join "`n")
+    Write-Host "Successfully installed:`n"($installed_successfully -join "`n")
   }
   if($install_failed -gt 0) {
-    Write-Host "Installs which failed:`n" ($install_failed -join "`n")
+    Write-Host "Installs which failed:`n"($install_failed -join "`n")
   }
 }
 
