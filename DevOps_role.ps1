@@ -6,6 +6,7 @@ run "Set-ExecutionPolicy Bypass" first.
 3. cd into containing directory and run script with .\DevOps_role.ps1
 #>
 
+# Searchable list of apps available by running 'choco search <packagename>'
 $apps = @(
   "git",
   "vim",
@@ -26,14 +27,21 @@ $apps = @(
   "curl",
   "webstorm",
   "googlechrome",
-  "virtualbox",  # Only supports 32-bit hosts on workspaces
+  "virtualbox",  # Only supports 32-bit guests on workspaces
   "docker",
   "docker-machine",
   "docker-compose",
   "vagrant"
 )
-[System.Collections.ArrayList]$installed_successfully = @( )
-[System.Collections.ArrayList]$install_failed = @( ) 
+
+# Searchable list of windows features available by running 'Get-WindowsFeature'
+$windows_features = @(
+  "Telnet-Client"
+) 
+
+$remote_files = @{
+  "https://downloads.dcos.io/binaries/cli/windows/x86-64/dcos-1.9/dcos.exe" = "C:\ProgramData\chocolatey\bin\dcos.exe"
+}
 
 $paths = @(
   "C:\Python36\Scripts\",
@@ -48,11 +56,16 @@ $paths = @(
   "C:\Program Files (x86)\Microsoft VS Code\bin"
 )
 
+[System.Collections.ArrayList]$installed_successfully = @( )
+[System.Collections.ArrayList]$install_failed = @( )
+
 function Configure-Vela-Workspace() {
   Install-Chocolatey
   Install-Apps
+  Install-WinFeatures
+  Download-Files
   Add-Paths
-  Final-Report
+  Show-Report
 }
 
 function Install-Chocolatey() {
@@ -64,8 +77,34 @@ function Install-Chocolatey() {
 function Install-Apps() {
   foreach ($app in $apps) {
     choco install $app -y
-    Trap-Status
+    Trap-Status -item $app
   }
+}
+
+function Install-WinFeatures() {
+  foreach ($feature in $windows_features) {
+    Install-WindowsFeature $feature
+    Trap-Status -item $feature
+  }
+}
+
+function Download-Files() {
+  foreach ($remote_file in $remote_files.GetEnumerator()) {
+    if (-Not (Test-Path $remote_file.Value)) {
+      Download-File -Source $remote_file.Name.toString() -Destination $remote_file.Value
+    }
+    Trap-Status -item $remote_file.Name
+  }
+}
+
+function Download-File($Source, $Destination) {
+  Write-Host "Downloading $source to $destination"
+    try {
+      (New-Object System.Net.WebClient).DownloadFile($source, $destination)
+    } catch {
+      write-error $_.Exception
+      $LASTEXITCODE = 1
+    }
 }
 
 function Add-Paths() {
@@ -83,15 +122,16 @@ function Add-Path($Path) {
   }
 }
 
-function Trap-Status() {
+function Trap-Status($item) {
   if($LASTEXITCODE -eq 0) {
-    $installed_successfully.add($app)
+    $installed_successfully.add($item)
   } else {
-    $install_failed.add($app)
+    $install_failed.add($item)
   }
 }
 
-function Final-Report() {
+function Show-Report() {
+  Write-Host "########## Vela Configuration Report##########"
   if($installed_successfully.count -gt 0) {
     Write-Host "Successfully installed:`n" ($installed_successfully -join "`n")
   }
