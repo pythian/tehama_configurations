@@ -53,7 +53,6 @@ $windows_features = @(
 ) 
 
 $remote_files = @{
-  "https://downloads.dcos.io/binaries/cli/windows/x86-64/dcos-1.9/dcos.exe" = "C:\ProgramData\chocolatey\bin\dcos.exe";
   # Wox is an Alfred equivalent launcher for Windows: Option + Spacebar
   "https://github.com/Wox-launcher/Wox/releases/download/v1.3.424/Wox-1.3.424.exe" = "C:\ProgramData\chocolatey\bin\Wox.exe"
 }

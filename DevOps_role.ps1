@@ -61,9 +61,7 @@ $windows_features = @(
 $remote_files = @{
   "https://downloads.dcos.io/binaries/cli/windows/x86-64/dcos-1.9/dcos.exe" = "C:\ProgramData\chocolatey\bin\dcos.exe";
   # Wox is an Alfred equivalent launcher for Windows: Option + Spacebar
-  "https://github.com/Wox-launcher/Wox/releases/download/v1.3.424/Wox-1.3.424.exe" = "C:\ProgramData\chocolatey\bin\Wox.exe";
-  # apt-cyg is a package manager for cygwin.
-  "https://raw.githubusercontent.com/transcode-open/apt-cyg/master/apt-cyg" = "C:\tools\cygwin\bin\apt-cyg"
+  "https://github.com/Wox-launcher/Wox/releases/download/v1.3.424/Wox-1.3.424.exe" = "C:\ProgramData\chocolatey\bin\Wox.exe"
 }
 
 # Searchable list of Cygwin packages available at https://cygwin.com/cgi-bin2/package-grep.cgi

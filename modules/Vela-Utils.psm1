@@ -25,12 +25,12 @@ function Install-Apps($Apps) {
   Install-Chocolatey
   foreach ($app in $Apps) {
     choco install $app -y
-    Push-Status -item $app
+    Push-Status -item "Choco - $app"
   }
 }
 
 function Install-Chocolatey() {
-  if(-Not (Get-Command choco -errorAction SilentlyContinue)) {
+  if(-Not (Get-Command choco -ErrorAction SilentlyContinue)) {
     iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
   }
 }
@@ -38,7 +38,7 @@ function Install-Chocolatey() {
 function Install-WinFeatures($Features) {
   foreach ($feature in $windows_features) {
     Install-WindowsFeature $feature
-    Push-Status -item $feature
+    Push-Status -item "Windows Feature - $feature"
   }
 }
 
@@ -54,6 +54,7 @@ function Install-Python() {
   if(-Not (Get-Command pip3 -ErrorAction SilentlyContinue)) {
     Install-Chocolatey
     choco install python -y
+    Push-Status "Choco - python"
   }
 }
 
@@ -68,10 +69,11 @@ function Install-CygwinPackages ($Packages) {
 function Install-Cygwin() {
   if (-Not (Test-Path C:\tools\cygwin\bin\bash.exe)) {
     choco install cygwin -y
+    Push-Status "Choco - cygwin"
   }
   if (-Not (Test-Path C:\tools\cygwin\bin\apt-cyg)) {
-    Get-RemoteFile("https://raw.githubusercontent.com/transcode-open/apt-cyg/master/apt-cyg",
-                   "C:\tools\cygwin\bin\apt-cyg")
+    Get-RemoteFile -Source "https://raw.githubusercontent.com/transcode-open/apt-cyg/master/apt-cyg" -Destination "C:\tools\cygwin\bin\apt-cyg"
+    Push-Status "Remote - apt-cyg"
   }
 }
 
@@ -111,9 +113,9 @@ function Get-RemoteFiles($Remote_Files) {
 }
 
 function Get-RemoteFile($Source, $Destination) {
-  Write-Host "Downloading $source to $destination"
+  Write-Host "Downloading $Source to $Destination"
     try {
-      (New-Object System.Net.WebClient).DownloadFile($source, $destination)
+      (New-Object System.Net.WebClient).DownloadFile($Source, $Destination)
     } catch {
       write-error $_.Exception
       $LASTEXITCODE = 1
