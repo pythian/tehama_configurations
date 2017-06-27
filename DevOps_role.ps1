@@ -3,9 +3,19 @@ Requirements:
 1. Right click powershell and run as administrator.  
 2. In powershell, Get-ExecutionPolicy should not be set to "Restricted".  If it is
 run "Set-ExecutionPolicy Bypass" first.
-3. cd into containing directory and run script with .\DevOps_role.ps1
+3. Copy, paste, and run this in the terminal: 
+iex((System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/pythian/vela_configurations/master/DevOps_role.ps1'))
 #>
-Import-Module $PSScriptRoot/modules/Vela-Utils.psm1 -Force
+
+if(Test-Path $PSScriptRoot/modules/Vela-Utils.psm1) {
+  Import-Module $PSScriptRoot/modules/Vela-Utils.psm1 -Force
+} else {
+  Remove-Item ~\AppData\Local\Temp\Vela-Utils.psm1 -ErrorAction SilentlyContinue
+  (New-Object System.Net.WebClient).DownloadFile(
+    'https://raw.githubusercontent.com/pythian/vela_configurations/master/modules/Vela-Utils.psm1',
+    "~\AppData\Local\Temp\Vela-Utils.psm1")
+  Import-Module ~\AppData\Local\Temp\Vela-Utils.psm1 -Force
+}
 
 # Searchable list of apps available by running 'choco search <packagename>'
 $apps = @(
