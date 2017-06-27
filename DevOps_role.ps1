@@ -76,11 +76,6 @@ $git_repos = @{
   "https://github.com/ansible/ansible" = "C:\tools\cygwin\opt\ansible"
 }
 
-# Copy ansible libs into cygwin python lib folder
-if (-Not (Test-Path C:\tools\cygwin\lib\python2.7\ansible)) {
-  Copy-Item C:\tools\cygwin\opt\ansible\lib\* C:\tools\cygwin\lib\python2.7 -Recurse
-}
-
 $paths = @(
   "C:\Python36\Scripts\",
   "C:\Python36\",
@@ -104,3 +99,8 @@ Set-VelaWorkspaceConfiguration `
   -GitRepos $git_repos `
   -Paths $paths `
   -PostInstallMessage "`nRun 'Wox.exe' once to start an Alfred-like launcher."
+
+# Copy ansible libs into cygwin python lib folder
+if (-Not (Test-Path C:\tools\cygwin\lib\python2.7\ansible)) {
+  Copy-Item C:\tools\cygwin\opt\ansible\lib\* C:\tools\cygwin\lib\python2.7 -Recurse
+}
