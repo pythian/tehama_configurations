@@ -51,11 +51,27 @@ $remote_files = @{
 }
 
 # Searchable list of Cygwin packages available at https://cygwin.com/cgi-bin2/package-grep.cgi
+# or via cli in Cygwin by 'apt-cyg searchall <packagename>'
 $cygwin_packages = @(
-  "python",
-  "ruby",
-  "git"
+  "python2",
+  "python-pip",
+  "openssl",
+  "openssl-devel",  # Required for ansible
+  "python-crypto",  # Required for ansible
+  "python-openssl", # Required for ansible
+  "python-yaml",    # Required for ansible
+  "python-jinja2"   # Required for ansible
 )
+
+# Ansible client doesn't work on windows outside of cygwin today.
+$git_repos = @{
+  "https://github.com/ansible/ansible" = "C:\tools\cygwin\opt\ansible"
+}
+
+# Copy ansible libs into cygwin python lib folder
+if (-Not (Test-Path C:\tools\cygwin\lib\python2.7\ansible)) {
+  Copy-Item C:\tools\cygwin\opt\ansible\lib\* C:\tools\cygwin\lib\python2.7 -Recurse
+}
 
 $paths = @(
   "C:\Python36\Scripts\",
@@ -67,7 +83,8 @@ $paths = @(
   "C:\Program Files (x86)\vim\vim80",
   "C:\Program Files (x86)\Yarn\bin",
   "D:\Users\wayekoxodise\AppData\Local\Yarn\bin",
-  "C:\Program Files (x86)\Microsoft VS Code\bin"
+  "C:\Program Files (x86)\Microsoft VS Code\bin",
+  "C:\tools\cygwin\opt\ansible\bin"
 )
 
 Set-VelaWorkspaceConfiguration `
@@ -76,5 +93,6 @@ Set-VelaWorkspaceConfiguration `
   -RemoteFiles $remote_files `
   -PipPackages $pip_packages `
   -CygwinPackages $cygwin_packages `
+  -GitRepos $git_repos `
   -Paths $paths `
   -PostInstallMessage "`nRun 'Wox.exe' once to start an Alfred-like launcher."

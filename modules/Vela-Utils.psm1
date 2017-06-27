@@ -7,6 +7,7 @@ function Set-VelaWorkspaceConfiguration(
   $RemoteFiles, 
   $PipPackages, 
   $CygwinPackages,
+  $GitRepos,
   $Paths,
   $PostInstallMessage) {
   Install-Apps -Apps $Apps
@@ -14,6 +15,7 @@ function Set-VelaWorkspaceConfiguration(
   Get-RemoteFiles -Remote_Files $RemoteFiles
   Install-PipPackages -Packages $PipPackages
   Install-CygwinPackages -Packages $CygwinPackages
+  Install-GitRepos -Repos $GitRepos
   Add-Paths -Paths $Paths
   Show-Report
   Write-Host $PostInstallMessage
@@ -70,6 +72,30 @@ function Install-Cygwin() {
   if (-Not (Test-Path C:\tools\cygwin\bin\apt-cyg)) {
     Get-RemoteFile("https://raw.githubusercontent.com/transcode-open/apt-cyg/master/apt-cyg",
                    "C:\tools\cygwin\bin\apt-cyg")
+  }
+}
+
+function Install-GitRepos($Repos) {
+  Install-Git
+  foreach ($repo in $Repos.GetEnumerator()) {
+    $repo_url = $repo.Name.toString()
+    Install-GitRepo -source $repo_url -destination $repo.Value.toString()
+    Push-Status "Git - $repo_url"
+  }
+}
+
+function Install-GitRepo($source, $destination) {
+  if (-Not (Test-Path $destination)) {
+    Write-Host "Cloning repo $source"
+    git clone $source $destination
+  } else {
+    Write-Host "$source already exists locally at $destination"
+  }
+}
+
+function Install-Git() {
+  if (-Not (Get-Command git -ErrorAction SilentlyContinue)) {
+    choco install git -y
   }
 }
 
