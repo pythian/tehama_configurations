@@ -4,16 +4,15 @@ Requirements:
 2. In powershell, Get-ExecutionPolicy should not be set to "Restricted".  If it is
 run "Set-ExecutionPolicy Bypass" first.
 3. Copy, paste, and run this in the terminal: 
-iex((System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/pythian/vela_configurations/master/OSDB_role.ps1'))
+iex((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/pythian/vela_configurations/master/OSDB_role.ps1'))
 #>
+
 if(Test-Path $PSScriptRoot/modules/Vela-Utils.psm1) {
   Import-Module $PSScriptRoot/modules/Vela-Utils.psm1 -Force
 } else {
-  Remove-Item ~\AppData\Local\Temp\Vela-Utils.psm1 -ErrorAction SilentlyContinue
-  (New-Object System.Net.WebClient).DownloadFile(
-    'https://raw.githubusercontent.com/pythian/vela_configurations/master/modules/Vela-Utils.psm1',
-    "~\AppData\Local\Temp\Vela-Utils.psm1")
-  Import-Module ~\AppData\Local\Temp\Vela-Utils.psm1 -Force
+  Remove-Item $HOME\AppData\Local\Temp\Vela-Utils.psm1 -ErrorAction SilentlyContinue
+  (New-Object System.Net.WebClient).DownloadFile('https://raw.githubusercontent.com/pythian/vela_configurations/master/modules/Vela-Utils.psm1', "$HOME\AppData\Local\Temp\Vela-Utils.psm1")
+  Import-Module $HOME\AppData\Local\Temp\Vela-Utils.psm1 -Force
 }
 
 # Searchable list of apps available by running 'choco search <packagename>'

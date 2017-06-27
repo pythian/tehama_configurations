@@ -4,6 +4,6 @@
 3. In powershell, Get-ExecutionPolicy should not be set to "Restricted".  If it is
 run "Set-ExecutionPolicy Bypass" first.
 4. Copy, paste, and run this in the terminal: 
-iex((System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/pythian/vela_configurations/master/DevOps_role.ps1')) 
+iex((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/pythian/vela_configurations/master/DevOps_role.ps1')) 
 
 or substitute url for the role desired.
