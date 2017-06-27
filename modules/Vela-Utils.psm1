@@ -1,6 +1,24 @@
 [System.Collections.ArrayList]$installed_successfully = @( )
 [System.Collections.ArrayList]$install_failed = @( )
 
+function Set-VelaWorkspaceConfiguration(
+  $Apps, 
+  $WindowsFeatures, 
+  $RemoteFiles, 
+  $PipPackages, 
+  $CygwinPackages,
+  $Paths,
+  $PostInstallMessage) {
+  Install-Apps -Apps $Apps
+  Install-WinFeatures -Features $WindowsFeatures
+  Get-RemoteFiles -Remote_Files $RemoteFiles
+  Install-PipPackages -Packages $PipPackages
+  Install-CygwinPackages -Packages $CygwinPackages
+  Add-Paths -Paths $Paths
+  Show-Report
+  Write-Host $PostInstallMessage
+}
+
 function Install-Apps($Apps) {
   Install-Chocolatey
   foreach ($app in $Apps) {
@@ -102,9 +120,11 @@ function Push-Status($item) {
 function Show-Report() {
   Write-Host "`n########## Vela Configuration Report##########"
   if($installed_successfully.count -gt 0) {
-    Write-Host "Successfully installed:`n"($installed_successfully -join "`n")
+    $successful_installs = ($installed_successfully -join "`n")
+    Write-Host "Successfully installed:`n$successful_installs"
   }
   if($install_failed -gt 0) {
-    Write-Error "Installs which failed:`n"($install_failed -join "`n")
+    $failed_installs = ($install_failed -join "`n")
+    Write-Warning "Installs which failed:`n$failed_installs"
   }
 }
