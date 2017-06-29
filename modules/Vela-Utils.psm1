@@ -24,8 +24,22 @@ function Set-VelaWorkspaceConfiguration(
 function Install-Apps($Apps) {
   Install-Chocolatey
   foreach ($app in $Apps) {
-    choco install $app -y
+    Install-App -app $app
     Push-Status -item "Choco - $app"
+  }
+}
+
+function Install-App($app) {
+  if ($app.GetType().Name -eq "Hashtable") {
+    if (-Not($app.checksum -eq $null)) {
+      $checksum = "--checksum $($app.checksum)"
+    }
+    if (-Not($app.version -eq $null)) {
+      $version = "--version $($app.version)"
+    }
+    Invoke-Expression("choco install $($app.name) $version $checksum -y")
+  } else {
+    choco install $app -y
   }
 }
 
@@ -37,7 +51,7 @@ function Install-Chocolatey() {
 
 function Install-WinFeatures($Features) {
   foreach ($feature in $windows_features) {
-    Install-WindowsFeature $feature
+    Add-WindowsFeature $feature
     Push-Status -item "Windows Feature - $feature"
   }
 }

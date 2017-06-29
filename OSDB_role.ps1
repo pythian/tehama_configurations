@@ -18,17 +18,25 @@ if(Test-Path $PSScriptRoot/modules/Vela-Utils.psm1) {
 # Searchable list of apps available by running 'choco search <packagename>'
 $apps = @(
   "visioviewer",
+  @{"name" = "powerbi";
+    "version" = "2.46.4732.721";
+    "checksum" = "89A6A935C9ACE3D42487BA26381D320FE5B02C55A45378E8DC9D574DE1BA8C7C"};
   "Office365ProPlus",
+  "dropbox",
   "7zip",
+  "jdk8",
   "git",
   "vim",
   "conemu",
   "python",
+  "notepadplusplus",
   "visualstudiocode",
   "sublimetext3",
   "mysql.workbench",
   "cygwin",
   "superputty",
+  "winscp",
+  "cyberduck",
   "grepwin",
   "jq",
   "wget",
@@ -44,7 +52,11 @@ $apps = @(
 
 # Searchable list of Python packages available by running 'pip3 search <packagename>'
 $pip_packages = @(
-  "awscli"
+  "awscli",
+  "jupyter",
+  "matplotlib",
+  "numpy",
+  "pandas"
 )
 
 # Searchable list of windows features available by running 'Get-WindowsFeature'
@@ -60,6 +72,7 @@ $remote_files = @{
 # Searchable list of Cygwin packages available at https://cygwin.com/cgi-bin2/package-grep.cgi
 # or via cli in Cygwin by 'apt-cyg searchall <packagename>'
 $cygwin_packages = @(
+  "tmux",
   "python2",
   "python-pip",
   "openssl",
