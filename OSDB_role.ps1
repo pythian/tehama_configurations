@@ -109,8 +109,7 @@ Set-VelaWorkspaceConfiguration `
   -PipPackages $pip_packages `
   -CygwinPackages $cygwin_packages `
   -GitRepos $git_repos `
-  -Paths $paths `
-  -PostInstallMessage "`nPress option + space to start an Alfred-like launcher."
+  -Paths $paths
 
 # Copy ansible libs into cygwin python lib folder
 if (-Not (Test-Path C:\tools\cygwin\lib\python2.7\ansible)) {
@@ -121,3 +120,5 @@ if (-Not (Test-Path C:\tools\cygwin\lib\python2.7\ansible)) {
 if (-Not (get-process 'Wox' -ea SilentlyContinue)) {
   Wox.exe
 }
+
+Write-Host "`nPress option + space to start an Alfred-like launcher."

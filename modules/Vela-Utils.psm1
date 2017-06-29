@@ -8,8 +8,7 @@ function Set-VelaWorkspaceConfiguration(
   $PipPackages, 
   $CygwinPackages,
   $GitRepos,
-  $Paths,
-  $PostInstallMessage) {
+  $Paths) {
   Install-Apps -Apps $Apps
   Install-WinFeatures -Features $WindowsFeatures
   Get-RemoteFiles -Remote_Files $RemoteFiles
@@ -18,7 +17,6 @@ function Set-VelaWorkspaceConfiguration(
   Install-GitRepos -Repos $GitRepos
   Add-Paths -Paths $Paths
   Show-Report
-  Write-Host $PostInstallMessage
 }
 
 function Install-Apps($Apps) {
