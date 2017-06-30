@@ -44,7 +44,8 @@ $apps = @(
   "slack",
   "chefdk",
   "packer",
-  "puppet"
+  "puppet",
+  "lastpass"
 )
 
 # Searchable list of Python packages available by running 'pip3 search <packagename>'
