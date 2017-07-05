@@ -96,8 +96,6 @@ $paths = @(
   "C:\Program Files\Git\usr\bin",
   "C:\Program Files\nodejs\",
   "C:\Program Files (x86)\vim\vim80",
-  "C:\Program Files (x86)\Yarn\bin",
-  "D:\Users\wayekoxodise\AppData\Local\Yarn\bin",
   "C:\Program Files (x86)\Microsoft VS Code\bin",
   "C:\tools\cygwin\opt\ansible\bin"
 )
