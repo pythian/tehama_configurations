@@ -17,6 +17,7 @@ if(Test-Path $PSScriptRoot/modules/Vela-Utils.psm1) {
 
 # Searchable list of apps available by running 'choco search <packagename>'
 $apps = @(
+  "putty",
   "git",
   "vim",
   "conemu",
