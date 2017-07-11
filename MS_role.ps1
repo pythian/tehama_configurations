@@ -1,9 +1,9 @@
 <#
 Requirements:
-1. Right click powershell and run as administrator.
+1. Right click powershell and run as administrator.  
 2. In powershell, Get-ExecutionPolicy should not be set to "Restricted".  If it is
 run "Set-ExecutionPolicy Bypass" first.
-3. Copy, paste, and run this in the terminal:
+3. Copy, paste, and run this in the terminal: 
 iex((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/pythian/vela_configurations/master/OSDB_role.ps1'))
 #>
 
@@ -17,6 +17,12 @@ if(Test-Path $PSScriptRoot/modules/Vela-Utils.psm1) {
 
 # Searchable list of apps available by running 'choco search <packagename>'
 $apps = @(
+  "visioviewer",
+  @{"name" = "powerbi";
+    "version" = "2.46.4732.721";
+    "checksum" = "89A6A935C9ACE3D42487BA26381D320FE5B02C55A45378E8DC9D574DE1BA8C7C"};
+  "Office365ProPlus",
+  "dropbox",
   "7zip",
   "jdk8",
   "git",
@@ -24,9 +30,11 @@ $apps = @(
   "conemu",
   "python",
   "notepadplusplus",
+  "visualstudiocode",
   "sublimetext3",
   "mysql.workbench",
   "cygwin",
+  "superputty",
   "winscp",
   "cyberduck",
   "grepwin",
@@ -35,19 +43,26 @@ $apps = @(
   "curl",
   "googlechrome",
   "virtualbox",  # Only supports 32-bit guests on workspaces
+  "docker",
+  "docker-machine",
+  "docker-compose",
   "vagrant",
   "slack"
 )
 
 # Searchable list of Python packages available by running 'pip3 search <packagename>'
 $pip_packages = @(
-  "awscli"
+  "awscli",
+  "jupyter",
+  "matplotlib",
+  "numpy",
+  "pandas"
 )
 
 # Searchable list of windows features available by running 'Get-WindowsFeature'
 $windows_features = @(
   "Telnet-Client"
-)
+) 
 
 $remote_files = @{
   # Wox is an Alfred equivalent launcher for Windows: Option + Spacebar
@@ -61,15 +76,11 @@ $cygwin_packages = @(
   "python2",
   "python-pip",
   "openssl",
-  "openssh", # Required for ansible ssh
   "openssl-devel",  # Required for ansible
   "python-crypto",  # Required for ansible
   "python-openssl", # Required for ansible
   "python-yaml",    # Required for ansible
-  "python-jinja2",   # Required for ansible
-  "libffi-devel",   # Required for ansible
-  "gcc-g++",   # Required for ansible
-  "inetutils"   # Required for ansible
+  "python-jinja2"   # Required for ansible
 )
 
 # Ansible client doesn't work on windows outside of cygwin today.
