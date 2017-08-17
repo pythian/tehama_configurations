@@ -1,12 +1,3 @@
-<#
-Requirements:
-1. Right click powershell and run as administrator.
-2. In powershell, Get-ExecutionPolicy should not be set to "Restricted".  If it is
-run "Set-ExecutionPolicy Bypass" first.
-3. Copy, paste, and run this in the terminal:
-iex((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/pythian/vela_configurations/master/OSDB_role.ps1'))
-#>
-
 if(Test-Path $PSScriptRoot/modules/Vela-Utils.psm1) {
   Import-Module $PSScriptRoot/modules/Vela-Utils.psm1 -Force
 } else {
